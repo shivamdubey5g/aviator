@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Reliance Processor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .metric-card h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f44336;
+            margin: 10px 0;
+        }
+        
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            margin: 10px 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .example-data {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        
+        .example-link {
+            color: #4CAF50;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .example-link:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Digital Reliance Processor</h1>
+            <p>Analyze and evaluate the reliability of your digital systems</p>
+        </div>
+        
+        <div class="main-content">
+            <form id="relianceForm">
+                <div class="form-section">
+                    <h2>System Data Input</h2>
+                    <div class="form-group">
+                        <label for="systemData">Enter your system data in JSON format:</label>
+                        <textarea id="systemData" name="systemData" placeholder="Enter JSON data here..."></textarea>
+                        <div class="example-link" onclick="loadExampleData()">
+                            Click here to load example data
+                        </div>
+                        <div id="exampleData" class="example-data" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    Process Digital Reliance
+                </button>
+            </form>
+            
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing your data...</p>
+            </div>
+            
+            <div id="results" class="results">
+                <h3>Analysis Results</h3>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('relianceForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const resultsContent = document.getElementById('resultsContent');
+        
+        const exampleData = {
+            "assets": [
+                {
+                    "id": "web-server-01",
+                    "type": "server",
+                    "status": "active",
+                    "last_updated": "2024-01-15 10:30:00"
+                },
+                {
+                    "id": "database-primary",
+                    "type": "database",
+                    "status": "active",
+                    "last_updated": "2024-01-14 15:45:00"
+                },
+                {
+                    "id": "api-service",
+                    "type": "service",
+                    "status": "active",
+                    "last_updated": "2024-01-15 09:20:00"
+                }
+            ],
+            "dependencies": [
+                {
+                    "source": "web-server-01",
+                    "target": "database-primary",
+                    "type": "critical"
+                },
+                {
+                    "source": "api-service",
+                    "target": "database-primary",
+                    "type": "critical"
+                }
+            ],
+            "reliability": {
+                "uptime": 99.5,
+                "availability": 99.2,
+                "response_time": 150,
+                "error_rate": 0.02
+            },
+            "performance": {
+                "cpu_usage": 45,
+                "memory_usage": 60,
+                "disk_usage": 35,
+                "network_latency": 25
+            }
+        };
+        
+        function loadExampleData() {
+            document.getElementById('systemData').value = JSON.stringify(exampleData, null, 2);
+            const exampleDiv = document.getElementById('exampleData');
+            exampleDiv.textContent = JSON.stringify(exampleData, null, 2);
+            exampleDiv.style.display = 'block';
+        }
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const systemDataValue = document.getElementById('systemData').value.trim();
+            
+            if (!systemDataValue) {
+                showError('Please enter system data');
+                return;
+            }
+            
+            let jsonData;
+            try {
+                jsonData = JSON.parse(systemDataValue);
+            } catch (error) {
+                showError('Invalid JSON format: ' + error.message);
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            results.classList.remove('show');
+            
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResults(result.data);
+                } else {
+                    showError(result.error + (result.details ? ': ' + result.details.join(', ') : ''));
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        function showResults(data) {
+            let html = '<div class="success">Processing completed successfully!</div>';
+            
+            // Reliability Score
+            html += `
+                <div class="metric-card">
+                    <h4>Overall Reliability Score</h4>
+                    <div class="metric-value">${data.reliability_score}%</div>
+                </div>
+            `;
+            
+            // Individual Metrics
+            const metrics = data.reliance_metrics;
+            html += `
+                <div class="metric-card">
+                    <h4>Availability Score</h4>
+                    <div class="metric-value">${metrics.availability_score}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Performance Score</h4>
+                    <div class="metric-value">${metrics.performance_score}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Security Score</h4>
+                    <div class="metric-value">${metrics.security_score}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Scalability Score</h4>
+                    <div class="metric-value">${metrics.scalability_score}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Maintainability Score</h4>
+                    <div class="metric-value">${metrics.maintainability_score}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Dependency Risk</h4>
+                    <div class="metric-value">${metrics.dependency_risk}%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Overall Health</h4>
+                    <div class="metric-value">${metrics.overall_health}%</div>
+                </div>
+            `;
+            
+            // Processing Info
+            html += `
+                <div class="metric-card">
+                    <h4>Processing Information</h4>
+                    <p><strong>Timestamp:</strong> ${data.timestamp}</p>
+                    <p><strong>Processing Time:</strong> ${data.processing_time}</p>
+                    <p><strong>Assets Processed:</strong> ${data.components.digital_assets.length}</p>
+                    <p><strong>Dependencies:</strong> ${data.components.dependencies.length}</p>
+                </div>
+            `;
+            
+            resultsContent.innerHTML = html;
+            results.classList.add('show');
+        }
+        
+        function showError(message) {
+            resultsContent.innerHTML = `<div class="error">${message}</div>`;
+            results.classList.add('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{
+    "assets": [
+        {
+            "id": "web-server-01",
+            "type": "server",
+            "status": "active",
+            "last_updated": "2024-01-15 10:30:00"
+        },
+        {
+            "id": "web-server-02",
+            "type": "server",
+            "status": "active",
+            "last_updated": "2024-01-15 10:35:00"
+        },
+        {
+            "id": "database-primary",
+            "type": "database",
+            "status": "active",
+            "last_updated": "2024-01-14 15:45:00"
+        },
+        {
+            "id": "database-replica",
+            "type": "database",
+            "status": "active",
+            "last_updated": "2024-01-14 15:45:00"
+        },
+        {
+            "id": "api-service",
+            "type": "service",
+            "status": "active",
+            "last_updated": "2024-01-15 09:20:00"
+        },
+        {
+            "id": "cache-service",
+            "type": "service",
+            "status": "active",
+            "last_updated": "2024-01-15 08:15:00"
+        },
+        {
+            "id": "load-balancer",
+            "type": "network",
+            "status": "active",
+            "last_updated": "2024-01-13 14:20:00"
+        },
+        {
+            "id": "monitoring-app",
+            "type": "application",
+            "status": "maintenance",
+            "last_updated": "2024-01-10 12:00:00"
+        }
+    ],
+    "dependencies": [
+        {
+            "source": "web-server-01",
+            "target": "database-primary",
+            "type": "critical"
+        },
+        {
+            "source": "web-server-02",
+            "target": "database-primary",
+            "type": "critical"
+        },
+        {
+            "source": "api-service",
+            "target": "database-primary",
+            "type": "critical"
+        },
+        {
+            "source": "api-service",
+            "target": "cache-service",
+            "type": "important"
+        },
+        {
+            "source": "load-balancer",
+            "target": "web-server-01",
+            "type": "critical"
+        },
+        {
+            "source": "load-balancer",
+            "target": "web-server-02",
+            "type": "critical"
+        },
+        {
+            "source": "database-replica",
+            "target": "database-primary",
+            "type": "important"
+        },
+        {
+            "source": "monitoring-app",
+            "target": "api-service",
+            "type": "optional"
+        }
+    ],
+    "reliability": {
+        "uptime": 99.5,
+        "availability": 99.2,
+        "response_time": 150,
+        "error_rate": 0.02,
+        "security_incidents": 0
+    },
+    "performance": {
+        "cpu_usage": 45,
+        "memory_usage": 60,
+        "disk_usage": 35,
+        "network_latency": 25
+    }
+}
